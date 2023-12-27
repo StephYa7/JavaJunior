@@ -1,6 +1,7 @@
 package Prac_1.Task_2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,39 +17,39 @@ public class Cart<T extends Food> {
     }
 
     public void cardBalancing() {
-        boolean proteins = false;
-        boolean fats = false;
-        boolean carbohydrates = false;
+        Boolean[] items = new Boolean[3];
+        items[0] = foodstuffs.stream().anyMatch(Food::getProteins);
+        items[1] = foodstuffs.stream().anyMatch(Food::getFats);
+        items[2] = foodstuffs.stream().anyMatch(Food::getCarbohydrates);
 
-        for (var food : foodstuffs) {
-            if (!proteins && food.getProteins()) proteins = true;
-            else if (!fats && food.getFats()) fats = true;
-            else if (!carbohydrates && food.getCarbohydrates()) carbohydrates = true;
-            if (proteins && fats && carbohydrates) break;
-        }
+        Arrays.stream(items).allMatch(s -> s == true);
 
-        if (proteins && fats && carbohydrates) {
+        if (Arrays.stream(items).allMatch(s -> s == true)) {
             System.out.println("Корзина уже сбалансирована по БЖУ.");
             return;
         }
 
-        for (var thing : market.getThings(clazz)) {
-            if (!proteins && thing.getProteins()) {
-                proteins = true;
-                foodstuffs.add(thing);
-            } else if (!fats && thing.getFats()) {
-                fats = true;
-                foodstuffs.add(thing);
-            } else if (!carbohydrates && thing.getCarbohydrates()) {
-                carbohydrates = true;
-                foodstuffs.add(thing);
-            }
-            if (proteins && fats && carbohydrates) break;
-        }
+        market.getThings(clazz).stream()
+                .filter(thing -> !items[0] && thing.getProteins())
+                .findFirst().ifPresent(thing -> {
+                    items[0] = true;
+                    foodstuffs.add(thing);
+                });
+        market.getThings(clazz).stream()
+                .filter(thing -> !items[1] && thing.getFats())
+                .findFirst().ifPresent(thing -> {
+                    items[1] = true;
+                    foodstuffs.add(thing);
+                });
+        market.getThings(clazz).stream()
+                .filter(thing -> !items[2] && thing.getCarbohydrates())
+                .findFirst().ifPresent(thing -> {
+                    items[2] = true;
+                    foodstuffs.add(thing);
+                });
 
-        if (proteins && fats && carbohydrates) System.out.println("Корзина сбалансирована по БЖУ.");
+        if (Arrays.stream(items).allMatch(s -> s == true)) System.out.println("Корзина сбалансирована по БЖУ.");
         else System.out.println("Невозможно сбалансировать корзину по БЖУ.");
-
     }
 
     public Collection<T> getFoodstuffs() {
@@ -57,15 +58,6 @@ public class Cart<T extends Food> {
 
 
     public void printFoodstuffs() {
-        /*int index = 1;
-        for (var food : foodstuffs)
-            System.out.printf(
-            "[%d] %s (Белки: %s Жиры: %s Углеводы: %s)\n"
-            , index++, food.getName()
-            , food.getProteins() ? "Да" : "Нет"
-            , food.getFats() ? "Да" : "Нет"
-            , food.getCarbohydrates() ? "Да" : "Нет");
-            */
         AtomicInteger index = new AtomicInteger(1);
         foodstuffs.forEach(food -> System.out.printf("[%d] %s (Белки: %s Жиры: %s Углеводы: %s)\n", index.getAndIncrement(), food.getName(), food.getProteins() ? "Да" : "Нет", food.getFats() ? "Да" : "Нет", food.getCarbohydrates() ? "Да" : "Нет"));
     }
