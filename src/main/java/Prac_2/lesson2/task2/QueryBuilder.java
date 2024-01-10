@@ -8,6 +8,7 @@ public class QueryBuilder {
 
     /**
      * Построить запрос на добавление данных в БД
+     *
      * @param obj
      * @return
      */
@@ -41,9 +42,9 @@ public class QueryBuilder {
                 if (field.isAnnotationPresent(Column.class)) {
                     field.setAccessible(true);
                     query
-                        .append("'")
-                        .append(field.get(obj))
-                        .append("', ");
+                            .append("'")
+                            .append(field.get(obj))
+                            .append("', ");
                 }
             }
 
@@ -52,8 +53,7 @@ public class QueryBuilder {
             }
 
             query.append(")");
-        }
-        else {
+        } else {
             return "";
         }
         return query.toString();
@@ -61,11 +61,12 @@ public class QueryBuilder {
 
     /**
      * Построить запрос на получение данных из БД
+     *
      * @param clazz
      * @param primaryKey
      * @return
      */
-    public String buildSelectQuery(Class<?> clazz, UUID primaryKey){
+    public String buildSelectQuery(Class<?> clazz, UUID primaryKey) {
         StringBuilder query = new StringBuilder("SELECT * FROM ");
 
 
@@ -79,16 +80,15 @@ public class QueryBuilder {
                     Column columnAnnotation = field.getAnnotation(Column.class);
                     if (columnAnnotation.primaryKey()) {
                         query
-                            .append(columnAnnotation.name())
-                            .append(" = '").append(primaryKey).append("'");
+                                .append(columnAnnotation.name())
+                                .append(" = '").append(primaryKey).append("'");
                         break;
                     }
 
                 }
             }
 
-        }
-        else {
+        } else {
             return "";
         }
         return query.toString();
@@ -96,6 +96,7 @@ public class QueryBuilder {
 
     /**
      * Построить запрос на удаление данных из бд
+     *
      * @param obj
      * @return
      */
@@ -134,8 +135,7 @@ public class QueryBuilder {
                 }
             }
 
-        }
-        else{
+        } else {
             return "";
         }
 
@@ -145,12 +145,13 @@ public class QueryBuilder {
 
     /**
      * TODO: Доработать запрос в рамках домашней работы
+     *
      * @param clazz
      * @param primaryKey
      * @return
      */
-    public String buildDeleteQuery(Class<?> clazz, UUID primaryKey){
-        StringBuilder query = new StringBuilder("DELETE * FROM ");
+    public String buildDeleteQuery(Class<?> clazz, UUID primaryKey) {
+        StringBuilder query = new StringBuilder("DELETE ");
 
 
         if (clazz.isAnnotationPresent(Table.class)) {
@@ -169,15 +170,11 @@ public class QueryBuilder {
                     }
                 }
             }
-        }
-        else {
+        } else {
             return "";
         }
         return query.toString();
     }
-
-
-
 
 
 }
