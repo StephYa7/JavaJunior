@@ -51,7 +51,7 @@ public class DatabaseManager {
     public void createTable(String tableName) throws SQLException {
         String createTableSQL = "CREATE TABLE IF NOT EXISTS "
                 + tableName
-                + " (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), duration INT);";
+                + " (id INT AUTO_INCREMENT PRIMARY KEY, Название VARCHAR(255), Длительность_в_месяцах INT);";
         try (PreparedStatement statement = connection.prepareStatement(createTableSQL)) {
             statement.execute();
         }
