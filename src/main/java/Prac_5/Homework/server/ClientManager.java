@@ -3,7 +3,6 @@ package Prac_5.Homework.server;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ClientManager implements Runnable {
@@ -11,7 +10,6 @@ public class ClientManager implements Runnable {
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
     private String name;
-
     protected static final List<ClientManager> clients = new ArrayList<>();
 
     public ClientManager(Socket socket) {
@@ -55,13 +53,15 @@ public class ClientManager implements Runnable {
 
     private void broadcastMessage(String message) {
         String[] buff = message.split(" ");
-        boolean privateMessage = buff[1].contains("@");
+
+        boolean privateMessage = buff[1].trim().startsWith("@");
         for (ClientManager client : clients) {
             boolean messageRecipient = buff[1].replace("@", "").equals(client.name);
             try {
                 if (privateMessage && messageRecipient) {
-                    String newMessage = message.substring(message.indexOf("@"));
-                    client.bufferedWriter.write(" ls from " + buff[0] + " : " + newMessage);
+                    String option = message.substring(message.indexOf("@")).trim();
+                    String newMessage = option.substring(option.indexOf(" ")).trim();
+                    client.bufferedWriter.write(" ls from " + buff[0].replace(":","") + " : " + newMessage);
                     client.bufferedWriter.newLine();
                     client.bufferedWriter.flush();
                 } else if (!client.name.equals(name) && message != null && !privateMessage) {
