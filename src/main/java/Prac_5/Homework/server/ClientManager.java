@@ -3,6 +3,7 @@ package Prac_5.Homework.server;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ClientManager implements Runnable {
@@ -53,9 +54,17 @@ public class ClientManager implements Runnable {
     }
 
     private void broadcastMessage(String message) {
+        String[] buff = message.split(" ");
+        boolean privateMessage = buff[1].contains("@");
         for (ClientManager client : clients) {
+            boolean messageRecipient = buff[1].replace("@", "").equals(client.name);
             try {
-                if (!client.name.equals(name) && message != null) {
+                if (privateMessage && messageRecipient) {
+                    String newMessage = message.substring(message.indexOf("@"));
+                    client.bufferedWriter.write(" ls from " + buff[0] + " : " + newMessage);
+                    client.bufferedWriter.newLine();
+                    client.bufferedWriter.flush();
+                } else if (!client.name.equals(name) && message != null && !privateMessage) {
                     client.bufferedWriter.write(message);
                     client.bufferedWriter.newLine();
                     client.bufferedWriter.flush();
