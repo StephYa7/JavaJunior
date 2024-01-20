@@ -1,6 +1,5 @@
 package Prac_4.Homework;
 
-import Prac_4.PracTask.models.Student;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

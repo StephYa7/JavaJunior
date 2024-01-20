@@ -41,3 +41,4 @@ build/
 /hw.txt
 /json.json
 /xml.xml
+/.idea/sonarlint/
